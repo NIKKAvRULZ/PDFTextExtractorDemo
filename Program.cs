@@ -168,7 +168,7 @@ class OCRProcessor
 {
     static void Main()
     {
-        string imagePath = "voucher.png";  // Path to your invoice image
+        string imagePath = "voucher2.png";  // Path to your invoice image
 
         if (!System.IO.File.Exists(imagePath))
         {
