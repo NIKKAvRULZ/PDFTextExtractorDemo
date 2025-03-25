@@ -1,4 +1,163 @@
-﻿using System;
+﻿// using System;
+// using System.Data.SqlClient;
+// using System.Text.RegularExpressions;
+// using Tesseract;
+
+// class OCRProcessor
+// {
+//     static void Main()
+//     {
+//         string imagePath = "voucher.png";  // Path to your invoice image
+
+//         if (!System.IO.File.Exists(imagePath))
+//         {
+//             Console.WriteLine("❌ Image file not found!");
+//             return;
+//         }
+
+//         try
+//         {
+//             // Extract text from the image
+//             Console.WriteLine("🔍 Extracting text from image...");
+//             string extractedText = ExtractTextFromImage(imagePath);
+
+//             // Parse extracted data
+//             Console.WriteLine("🔎 Parsing extracted data...");
+//             var invoiceData = ParseInvoiceData(extractedText);
+
+//             // Display extracted data
+//             DisplayTable(invoiceData);
+
+//             // Save data to SQL Server
+//             Console.WriteLine("💾 Saving data to SQL Server...");
+//             SaveToDatabase(invoiceData);
+
+//             Console.WriteLine("\n✅ Data stored successfully in SQL Server!");
+//         }
+//         catch (Exception ex)
+//         {
+//             Console.WriteLine("❌ Error: " + ex.Message);
+//         }
+//     }
+
+//     static string ExtractTextFromImage(string imagePath)
+//     {
+//         try
+//         {
+//             using (var engine = new TesseractEngine(@"tessdata", "eng", EngineMode.Default))
+//             {
+//                 using (var img = Pix.LoadFromFile(imagePath))
+//                 {
+//                     // Convert image to grayscale to enhance text recognition
+//                     var grayscaleImg = img.ConvertRGBToGray();
+
+//                     // Apply binarization (thresholding) for better contrast
+//                     grayscaleImg = grayscaleImg.BinarizeOtsuAdaptiveThreshold(200, 200, 10, 10, 0.1f);
+
+//                     using (var page = engine.Process(grayscaleImg))
+//                     {
+//                         return page.GetText();
+//                     }
+//                 }
+//             }
+//         }
+//         catch (Exception ex)
+//         {
+//             Console.WriteLine($"❌ Error during OCR extraction: {ex.Message}");
+//             throw;
+//         }
+//     }
+
+//     static (string PaidTo, string Date, string VoucherNo, string Email, string ContactNo, decimal TotalAmount) ParseInvoiceData(string text)
+//     {
+//         // Regex patterns to extract required fields
+//         string paidToPattern = @"Paid To\s*(\w+\s\w+)";
+//         string datePattern = @"Date\s*(\d{2}/\d{2}/\d{4})";
+//         string voucherNoPattern = @"Voucher No\s*(\d+)";
+//         string emailPattern = @"Email\s*([\w\.-]+@[\w\.-]+)";
+//         string contactPattern = @"Contact No\s*(\d+)";
+//         string totalAmountPattern = @"Final Amount\s*(\d+\.\d{2})";
+
+//         try
+//         {
+//             string paidTo = Regex.Match(text, paidToPattern).Groups[1].Value;
+//             string date = Regex.Match(text, datePattern).Groups[1].Value;
+//             string voucherNo = Regex.Match(text, voucherNoPattern).Groups[1].Value;
+//             string email = Regex.Match(text, emailPattern).Groups[1].Value;
+//             string contactNo = Regex.Match(text, contactPattern).Groups[1].Value;
+//             decimal totalAmount = decimal.TryParse(Regex.Match(text, totalAmountPattern).Groups[1].Value, out decimal parsedAmount) ? parsedAmount : 0;
+
+//             return (paidTo, date, voucherNo, email, contactNo, totalAmount);
+//         }
+//         catch (Exception ex)
+//         {
+//             Console.WriteLine($"❌ Error parsing invoice data: {ex.Message}");
+//             throw;
+//         }
+//     }
+
+//     static void DisplayTable((string PaidTo, string Date, string VoucherNo, string Email, string ContactNo, decimal TotalAmount) data)
+//     {
+//         Console.WriteLine("\n🧾 Extracted Petty Cash Voucher Data:");
+//         Console.WriteLine("+------------+------------+------------+----------------------+---------------+------------+");
+//         Console.WriteLine("| Paid To    | Date       | Voucher No | Email                | Contact No    | Amount     |");
+//         Console.WriteLine("+------------+------------+------------+----------------------+---------------+------------+");
+//         Console.WriteLine($"| {data.PaidTo,-10} | {data.Date,-10} | {data.VoucherNo,-10} | {data.Email,-20} | {data.ContactNo,-13} | {data.TotalAmount,-10} |");
+//         Console.WriteLine("+------------+------------+------------+----------------------+---------------+------------+");
+//     }
+
+//     static void SaveToDatabase((string PaidTo, string Date, string VoucherNo, string Email, string ContactNo, decimal TotalAmount) data)
+//     {
+//         string connectionString = "Server=NIKKA;Database=PettyCashDB;Integrated Security=True;";
+
+//         try
+//         {
+//             // Log the connection string being used
+//             Console.WriteLine("🔗 Connecting to SQL Server...");
+
+//             using (SqlConnection connection = new SqlConnection(connectionString))
+//             {
+//                 connection.Open();
+//                 Console.WriteLine("✅ Connection established successfully.");
+
+//                 string insertCommand = "INSERT INTO PettyCashVouchers1 (PaidTo, Date, VoucherNo, Email, ContactNo, TotalAmount) VALUES (@PaidTo, @Date, @VoucherNo, @Email, @ContactNo, @TotalAmount)";
+
+//                 using (SqlCommand command = new SqlCommand(insertCommand, connection))
+//                 {
+//                     command.Parameters.AddWithValue("@PaidTo", data.PaidTo);
+//                     command.Parameters.AddWithValue("@Date", data.Date);
+//                     command.Parameters.AddWithValue("@VoucherNo", data.VoucherNo);
+//                     command.Parameters.AddWithValue("@Email", data.Email);
+//                     command.Parameters.AddWithValue("@ContactNo", data.ContactNo);
+//                     command.Parameters.AddWithValue("@TotalAmount", data.TotalAmount);
+
+//                     Console.WriteLine("📝 Executing insert query...");
+//                     int rowsAffected = command.ExecuteNonQuery();
+
+//                     if (rowsAffected > 0)
+//                     {
+//                         Console.WriteLine("✅ Data successfully saved to SQL Server.");
+//                     }
+//                     else
+//                     {
+//                         Console.WriteLine("❌ No rows affected. Data may not have been inserted.");
+//                     }
+//                 }
+//             }
+//         }
+//         catch (SqlException ex)
+//         {
+//             Console.WriteLine("❌ SQL Error: " + ex.Message);
+//             Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+//         }
+//         catch (Exception ex)
+//         {
+//             Console.WriteLine("❌ General Error: " + ex.Message);
+//             Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+//         }
+//     }
+// }
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
@@ -94,12 +253,12 @@ class OCRProcessor
     ) ParseInvoiceData(string text)
     {
         // Improved regex patterns with more flexible matching
-        string paidToPattern = @"Paid To\s*:\s*(\w+\s\w+)";
-        string datePattern = @"Date\s*:\s*(\d{2}/\d{2}/\d{4})";
-        string voucherNoPattern = @"Voucher No\s*:\s*(\d+)";
-        string emailPattern = @"Email\s*:\s*([\w\.-]+@[\w\.-]+)";
-        string contactPattern = @"Contact No\s*:\s*(\d+)";
-        string totalAmountPattern = @"Total Amount\s*:\s*(\d+\.\d{2})";
+        string paidToPattern = @"Paid To\s*(\w+\s\w+)";
+        string datePattern = @"Date\s*(\d{2}/\d{2}/\d{4})";
+        string voucherNoPattern = @"Voucher No\s*(\d+)";
+        string emailPattern = @"Email\s*([\w\.-]+@[\w\.-]+)";
+        string contactPattern = @"Contact No\s*(\d+)";
+        string totalAmountPattern = @"Final Amount\s*(\d+\.\d{2})";
 
         try
         {
