@@ -1,0 +1,117 @@
+/* src/components/InvoiceDetails/InvoiceDetails.module.css */
+.detailsContainer {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  
+  .detailsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .detailCard {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .detailCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .detailHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  .detailIcon {
+    font-size: 1.2rem;
+    color: #6e8efb;
+  }
+  
+  .detailHeader h3 {
+    font-size: 1rem;
+    color: #555;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .detailValue {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .lineItems {
+    margin-top: 2rem;
+  }
+  
+  .lineItemsHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .lineItemsHeader h3 {
+    font-size: 1.2rem;
+    color: #555;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .lineItemsTable {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .tableHeader {
+    display: contents;
+  }
+  
+  .tableHeader div {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    padding: 1rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .tableRow {
+    display: contents;
+  }
+  
+  .tableRow div {
+    padding: 1rem;
+    background-color: white;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+  }
+  
+  .tableRow:nth-child(even) div {
+    background-color: #f9f9f9;
+  }
