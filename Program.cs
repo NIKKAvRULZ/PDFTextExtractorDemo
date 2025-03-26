@@ -4,6 +4,31 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Tesseract;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+app.UseCors();
+app.MapControllers();
+
+app.Run();
 
 class OCRProcessor
 {
@@ -109,7 +134,7 @@ class OCRProcessor
             string voucherNo = SafeRegexExtract(text, voucherNoPattern, 1, "Voucher No")?.Trim();
             string email = SafeRegexExtract(text, emailPattern, 1, "Email")?.Trim();
             string contactNo = SafeRegexExtract(text, contactPattern, 1, "Contact No")?.Trim();
-            
+
             decimal totalAmount = 0;
             string amountStr = SafeRegexExtract(text, totalAmountPattern, 1, "Total Amount");
             if (!string.IsNullOrEmpty(amountStr))
@@ -159,7 +184,7 @@ class OCRProcessor
             if (string.IsNullOrWhiteSpace(line)) continue;
 
             // Try to parse line with number prefix (e.g., "1 22/12/2024 item/ Equipment No.1 3000.00")
-            var match = Regex.Match(line.Trim(), 
+            var match = Regex.Match(line.Trim(),
                 @"^\d+\s+(\d{2}/\d{2}/\d{4})\s+(.+?)\s+(\d+\.\d{2})$");
             if (match.Success)
             {
@@ -167,7 +192,7 @@ class OCRProcessor
                 string description = match.Groups[2].Value.Trim();
                 string amountStr = match.Groups[3].Value.Replace(",", "").Trim();
 
-                if (DateTime.TryParseExact(date, "dd/MM/yyyy", null, 
+                if (DateTime.TryParseExact(date, "dd/MM/yyyy", null,
                     System.Globalization.DateTimeStyles.None, out _) &&
                     decimal.TryParse(amountStr, out decimal amount))
                 {
@@ -207,28 +232,28 @@ class OCRProcessor
             Console.WriteLine("+------------+------------+------------+----------------------+---------------+------------+");
             Console.WriteLine("| Paid To    | Date       | Voucher No | Email                | Contact No    | Amount     |");
             Console.WriteLine("+------------+------------+------------+----------------------+---------------+------------+");
-            
+
             Console.WriteLine($"| {voucherData.PaidTo?.PadRight(10).Substring(0, 10)} | " +
                             $"{voucherData.Date?.PadRight(10).Substring(0, 10)} | " +
                             $"{voucherData.VoucherNo?.PadRight(10).Substring(0, 10)} | " +
                             $"{voucherData.Email?.PadRight(20).Substring(0, 20)} | " +
                             $"{voucherData.ContactNo?.PadRight(13).Substring(0, 13)} | " +
                             $"{voucherData.TotalAmount.ToString("N2").PadRight(10).Substring(0, 10)} |");
-            
+
             Console.WriteLine("+------------+------------+------------+----------------------+---------------+------------+");
 
             Console.WriteLine("\n📋 Line Items:");
             Console.WriteLine("+------------+--------------------------------+------------+");
             Console.WriteLine("| Date       | Description                   | Amount     |");
             Console.WriteLine("+------------+--------------------------------+------------+");
-            
+
             foreach (var item in lineItems)
             {
                 Console.WriteLine($"| {item.ItemDate?.PadRight(10).Substring(0, 10)} | " +
                                 $"{item.Description?.PadRight(30).Substring(0, 30)} | " +
                                 $"{item.Amount.ToString("N2").PadRight(10).Substring(0, 10)} |");
             }
-            
+
             Console.WriteLine("+------------+--------------------------------+------------+");
         }
         catch (Exception ex)
@@ -293,7 +318,7 @@ class OCRProcessor
                                 using (SqlCommand command = new SqlCommand(insertLineItemCommand, connection, transaction))
                                 {
                                     command.Parameters.AddWithValue("@VoucherId", voucherId);
-                                    command.Parameters.AddWithValue("@ItemDate", 
+                                    command.Parameters.AddWithValue("@ItemDate",
                                         DateTime.ParseExact(item.ItemDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
                                     command.Parameters.AddWithValue("@Description", item.Description);
                                     command.Parameters.AddWithValue("@Amount", item.Amount);

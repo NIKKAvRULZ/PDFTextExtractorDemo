@@ -48,14 +48,22 @@ const FileUpload = ({ onUploadSuccess }) => {
     formData.append("invoice", file);
 
     try {
-      const response = await axios.post("YOUR_BACKEND_ENDPOINT", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      onUploadSuccess(response.data);
+      const response = await axios.post(
+        "http://localhost:5000/api/OCR/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Handle the response (e.g., display extracted text)
+      const extractedText = response.data.extractedText;
+      console.log("Extracted Text:", extractedText);
+      onUploadSuccess(extractedText);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to process invoice");
+      setError(err.response?.data || "Failed to upload file");
     } finally {
       setIsLoading(false);
     }
