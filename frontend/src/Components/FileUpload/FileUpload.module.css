@@ -1,0 +1,111 @@
+/* src/components/FileUpload/FileUpload.module.css */
+.uploadContainer {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  
+  .subtitle {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+  }
+  
+  .dropzone {
+    border: 2px dashed #5f80d6;
+    border-radius: 10px;
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+  }
+  
+  .dropzone:hover, .active {
+    border-color: #6e8efb;
+    background-color: rgba(110, 142, 251, 0.05);
+  }
+  
+  .dropContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .uploadIcon {
+    font-size: 2.5rem;
+    color: #6c7fda;
+  }
+  
+  .filePreview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: rgba(167, 119, 227, 0.1);
+    border-radius: 8px;
+  }
+  
+  .fileIcon {
+    font-size: 1.5rem;
+    color: #6e8efb;
+  }
+  
+  .fileName {
+    font-weight: 500;
+    color: #444;
+  }
+  
+  .removeButton {
+    background: none;
+    border: none;
+    color: #ff4757;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-left: auto;
+    transition: transform 0.2s;
+  }
+  
+  .removeButton:hover {
+    transform: scale(1.2);
+  }
+  
+  .uploadButton {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(110, 142, 251, 0.3);
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .uploadButton:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  
+  .error {
+    color: #ff4757;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }

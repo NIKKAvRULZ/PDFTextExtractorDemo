@@ -1,0 +1,12 @@
+/* src/pages/HomePage.module.css */
+.container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    padding-bottom: 3rem;
+  }
+  
+  .content {
+    padding: 2rem 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
