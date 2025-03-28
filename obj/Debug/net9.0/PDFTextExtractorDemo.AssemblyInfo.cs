@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PDFTextExtractorDemo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+16a79b9c12869da6e2441162cce6828939d8cd59")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7bef1696eb384f75eaa55515e240375674fd7733")]
 [assembly: System.Reflection.AssemblyProductAttribute("PDFTextExtractorDemo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PDFTextExtractorDemo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
