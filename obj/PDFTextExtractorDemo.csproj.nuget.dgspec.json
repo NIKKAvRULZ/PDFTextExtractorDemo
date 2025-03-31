@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ASUS\\Documents\\GitHub\\PDFTextExtractorDemo\\PDFTextExtractorDemo.csproj": {}
+    "D:\\Downloads\\Projects\\PDFTextExtractorDemo\\PDFTextExtractorDemo.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ASUS\\Documents\\GitHub\\PDFTextExtractorDemo\\PDFTextExtractorDemo.csproj": {
+    "D:\\Downloads\\Projects\\PDFTextExtractorDemo\\PDFTextExtractorDemo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ASUS\\Documents\\GitHub\\PDFTextExtractorDemo\\PDFTextExtractorDemo.csproj",
+        "projectUniqueName": "D:\\Downloads\\Projects\\PDFTextExtractorDemo\\PDFTextExtractorDemo.csproj",
         "projectName": "PDFTextExtractorDemo",
-        "projectPath": "C:\\Users\\ASUS\\Documents\\GitHub\\PDFTextExtractorDemo\\PDFTextExtractorDemo.csproj",
+        "projectPath": "D:\\Downloads\\Projects\\PDFTextExtractorDemo\\PDFTextExtractorDemo.csproj",
         "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ASUS\\Documents\\GitHub\\PDFTextExtractorDemo\\obj\\",
+        "outputPath": "D:\\Downloads\\Projects\\PDFTextExtractorDemo\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
