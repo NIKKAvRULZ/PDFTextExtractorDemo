@@ -4,6 +4,7 @@ using PDFTextExtractorDemo_Backend.Services;
 using PDFTextExtractorDemo_Backend.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("http://*:5000");
 
 // Add CORS before other middleware
 builder.Services.AddCors(options =>
@@ -11,7 +12,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins("http://localhost:3000", "http://localhost:3001")
                   .AllowAnyMethod()
                   .AllowAnyHeader();
         });
