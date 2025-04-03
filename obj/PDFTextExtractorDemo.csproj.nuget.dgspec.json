@@ -74,6 +74,10 @@
               "target": "Package",
               "version": "[9.0.3, )"
             },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.3, )"
+            },
             "Moq": {
               "target": "Package",
               "version": "[4.20.72, )"

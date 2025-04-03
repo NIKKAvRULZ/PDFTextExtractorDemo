@@ -3,6 +3,7 @@ using PDFTextExtractorDemo_Backend.Models;
 using PDFTextExtractorDemo_Backend.Services.Interfaces;
 using Tesseract;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Hosting;
 
 namespace PDFTextExtractorDemo_Backend.Services
 {
