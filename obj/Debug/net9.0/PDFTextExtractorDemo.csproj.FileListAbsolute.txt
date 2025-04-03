@@ -154,3 +154,5 @@ C:\Users\ASUS\Documents\GitHub\PDFTextExtractorDemo\obj\Debug\net9.0\refint\PDFT
 C:\Users\ASUS\Documents\GitHub\PDFTextExtractorDemo\obj\Debug\net9.0\PDFTextExtractorDemo.pdb
 C:\Users\ASUS\Documents\GitHub\PDFTextExtractorDemo\obj\Debug\net9.0\PDFTextExtractorDemo.genruntimeconfig.cache
 C:\Users\ASUS\Documents\GitHub\PDFTextExtractorDemo\obj\Debug\net9.0\ref\PDFTextExtractorDemo.dll
+D:\Downloads\Projects\PDFTextExtractorDemo\obj\Debug\net9.0\PDFTextExtractorDemo.gentestingplatformentrypointinputcache.cache
+D:\Downloads\Projects\PDFTextExtractorDemo\obj\Debug\net9.0\PDFTextExtractorDemo.genautoregisteredextensionsinputcache.cache

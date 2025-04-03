@@ -3,55 +3,45 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Tesseract;
 
-class OCRProcessor
+public class OCRProcessor
 {
-    static void Main()
+    public static async Task ProcessUploadedImage(IFormFile imageFile)
     {
-        string imagePath = "voucher.png";  // Path to your invoice image
-
-        if (!System.IO.File.Exists(imagePath))
+        if (imageFile == null || imageFile.Length == 0)
         {
-            Console.WriteLine("❌ Image file not found!");
+            Console.WriteLine("❌ No image file uploaded!");
             return;
         }
 
         try
         {
-            // Extract text from the image
-            Console.WriteLine("🔍 Extracting text from image...");
-            string extractedText = ExtractTextFromImage(imagePath);
+            // Create a temporary file to store the uploaded image
+            string tempImagePath = Path.GetTempFileName();
+            
+            // Save the uploaded file to temp location
+            using (var stream = new FileStream(tempImagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
 
-            // Debug: Show raw extracted text
-            Console.WriteLine("=== RAW EXTRACTED TEXT ===");
-            Console.WriteLine(extractedText);
-            Console.WriteLine("==========================");
+            // Extract text from the image
+            Console.WriteLine("🔍 Extracting text from uploaded image...");
+            string extractedText = ExtractTextFromImage(tempImagePath);
+
+            // Clean up the temporary file
+            File.Delete(tempImagePath);
 
             // Parse extracted data
-            Console.WriteLine("🔎 Parsing extracted data...");
-            var (voucherData, lineItems) = ParseInvoiceData(extractedText);
+            var (paidTo, date, voucherNo, email, contactNo, totalAmount, lineItems) = ParseInvoiceData(extractedText);
+            var voucherData = (PaidTo: paidTo, Date: date, VoucherNo: voucherNo, Email: email, ContactNo: contactNo, TotalAmount: totalAmount);
 
-            // Debug: Show parsed data before display
-            Console.WriteLine("\n=== PARSED DATA DEBUG ===");
-            Console.WriteLine($"PaidTo: {voucherData.PaidTo}");
-            Console.WriteLine($"Date: {voucherData.Date}");
-            Console.WriteLine($"VoucherNo: {voucherData.VoucherNo}");
-            Console.WriteLine($"Email: {voucherData.Email}");
-            Console.WriteLine($"ContactNo: {voucherData.ContactNo}");
-            Console.WriteLine($"TotalAmount: {voucherData.TotalAmount}");
-            Console.WriteLine($"Line Items Count: {lineItems.Count}");
-            foreach (var item in lineItems)
-            {
-                Console.WriteLine($"- {item.ItemDate} | {item.Description} | {item.Amount}");
-            }
-            Console.WriteLine("========================");
-
-            // Display extracted data
+            // Display and save data
             DisplayTable(voucherData, lineItems);
-
-            // Save data to SQL Server
-            Console.WriteLine("💾 Saving data to SQL Server...");
             SaveToDatabase(voucherData, lineItems);
 
             Console.WriteLine("\n✅ Data stored successfully in SQL Server!");
@@ -63,7 +53,7 @@ class OCRProcessor
         }
     }
 
-    static string ExtractTextFromImage(string imagePath)
+    public static string ExtractTextFromImage(string imagePath)
     {
         try
         {
@@ -88,8 +78,25 @@ class OCRProcessor
         }
     }
 
-    static (
-        (string PaidTo, string Date, string VoucherNo, string Email, string ContactNo, decimal TotalAmount),
+    public static string SafeRegexExtract(string input, string pattern, int groupIndex)
+    {
+        try
+        {
+            var match = Regex.Match(input, pattern);
+            if (match.Success && match.Groups.Count > groupIndex)
+            {
+                return match.Groups[groupIndex].Value;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error in SafeRegexExtract: {ex.Message}");
+        }
+        return null;
+    }
+            // Removed redundant line as 'paidTo' is already assigned in ParseInvoiceData
+    public static (
+        string PaidTo, string Date, string VoucherNo, string Email, string ContactNo, decimal TotalAmount,
         List<(string ItemDate, string Description, decimal Amount)>
     ) ParseInvoiceData(string text)
     {
@@ -104,14 +111,14 @@ class OCRProcessor
         try
         {
             // Parse main voucher data
-            string paidTo = SafeRegexExtract(text, paidToPattern, 1, "Paid To")?.Trim();
-            string date = SafeRegexExtract(text, datePattern, 1, "Date")?.Trim();
-            string voucherNo = SafeRegexExtract(text, voucherNoPattern, 1, "Voucher No")?.Trim();
-            string email = SafeRegexExtract(text, emailPattern, 1, "Email")?.Trim();
-            string contactNo = SafeRegexExtract(text, contactPattern, 1, "Contact No")?.Trim();
+            string paidTo = SafeRegexExtract(text, paidToPattern, 1)?.Trim();
+            string date = SafeRegexExtract(text, datePattern, 1)?.Trim();
+            string voucherNo = SafeRegexExtract(text, voucherNoPattern, 1)?.Trim();
+            string email = SafeRegexExtract(text, emailPattern, 1)?.Trim();
+            string contactNo = SafeRegexExtract(text, contactPattern, 1)?.Trim();
             
             decimal totalAmount = 0;
-            string amountStr = SafeRegexExtract(text, totalAmountPattern, 1, "Total Amount");
+            string amountStr = SafeRegexExtract(text, totalAmountPattern, 1);
             if (!string.IsNullOrEmpty(amountStr))
             {
                 decimal.TryParse(amountStr.Replace(",", ""), out totalAmount);
@@ -120,7 +127,7 @@ class OCRProcessor
             // Parse line items
             var lineItems = ParseLineItems(text);
 
-            return ((paidTo, date, voucherNo, email, contactNo, totalAmount), lineItems);
+            return (paidTo, date, voucherNo, email, contactNo, totalAmount, lineItems);
         }
         catch (Exception ex)
         {
@@ -129,26 +136,7 @@ class OCRProcessor
         }
     }
 
-    static string SafeRegexExtract(string text, string pattern, int group, string fieldName)
-    {
-        try
-        {
-            var match = Regex.Match(text, pattern, RegexOptions.IgnoreCase);
-            if (match.Success && match.Groups.Count > group)
-            {
-                return match.Groups[group].Value;
-            }
-            Console.WriteLine($"⚠️ Could not extract {fieldName} using pattern: {pattern}");
-            return null;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"⚠️ Error extracting {fieldName}: {ex.Message}");
-            return null;
-        }
-    }
-
-    static List<(string ItemDate, string Description, decimal Amount)> ParseLineItems(string text)
+    public static List<(string ItemDate, string Description, decimal Amount)> ParseLineItems(string text)
     {
         var lineItems = new List<(string, string, decimal)>();
         var lines = text.Split('\n');
@@ -328,6 +316,30 @@ class OCRProcessor
         {
             Console.WriteLine("❌ General Error: " + ex.Message);
             Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+        }
+    }
+}
+
+[ApiController]
+[Route("api/[controller]")]
+public class OCRController : ControllerBase
+{
+    [HttpPost("upload")]
+    public async Task<IActionResult> UploadImage(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest("No file uploaded");
+        }
+
+        try
+        {
+            await OCRProcessor.ProcessUploadedImage(file);
+            return Ok("Image processed successfully");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
 }
