@@ -5,6 +5,18 @@ using PDFTextExtractorDemo_Backend.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS before other middleware
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -15,6 +27,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IOcrService, OcrService>();
 
 var app = builder.Build();
+
+// Add UseCors before other middleware
+app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {

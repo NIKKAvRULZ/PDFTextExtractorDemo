@@ -1,4 +1,8 @@
 /* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --primary: #6e8efb;
   --secondary: #a777e3;
