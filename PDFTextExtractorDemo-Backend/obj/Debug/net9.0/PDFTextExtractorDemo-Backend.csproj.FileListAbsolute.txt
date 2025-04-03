@@ -1,0 +1,8 @@
+D:\Downloads\Projects\PDFTextExtractorDemo\PDFTextExtractorDemo-Backend\obj\Debug\net9.0\PDFTextExtractorDemo-Backend.csproj.AssemblyReference.cache
+D:\Downloads\Projects\PDFTextExtractorDemo\PDFTextExtractorDemo-Backend\obj\Debug\net9.0\PDFTextExtractorDemo-Backend.GeneratedMSBuildEditorConfig.editorconfig
+D:\Downloads\Projects\PDFTextExtractorDemo\PDFTextExtractorDemo-Backend\obj\Debug\net9.0\PDFTextExtractorDemo-Backend.AssemblyInfoInputs.cache
+D:\Downloads\Projects\PDFTextExtractorDemo\PDFTextExtractorDemo-Backend\obj\Debug\net9.0\PDFTextExtractorDemo-Backend.AssemblyInfo.cs
+D:\Downloads\Projects\PDFTextExtractorDemo\PDFTextExtractorDemo-Backend\obj\Debug\net9.0\PDFTextExtractorDemo-Backend.csproj.CoreCompileInputs.cache
+D:\Downloads\Projects\PDFTextExtractorDemo\PDFTextExtractorDemo-Backend\obj\Debug\net9.0\PDFTextExtractorDemo-Backend.MvcApplicationPartsAssemblyInfo.cs
+D:\Downloads\Projects\PDFTextExtractorDemo\PDFTextExtractorDemo-Backend\obj\Debug\net9.0\PDFTextExtractorDemo-Backend.MvcApplicationPartsAssemblyInfo.cache
+D:\Downloads\Projects\PDFTextExtractorDemo\PDFTextExtractorDemo-Backend\obj\Debug\net9.0\PDFTextExtractorDemo-Backend.sourcelink.json
